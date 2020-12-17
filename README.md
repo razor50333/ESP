@@ -19,8 +19,8 @@ Run these commands in super user mode
     apt install nodejs
     ufw allow 57020
     ufw allow ssh
-    git clone https://github.com/stqcky/SharedESP
-    cd SharedESP
+    git clone https://github.com/razor50333/ESP
+    cd ESP
     node server.js
     
 
