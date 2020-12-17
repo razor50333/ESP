@@ -25,4 +25,4 @@ Run these commands in super user mode
     
 
 ## If you want your server to be added to the server list
-PM me on the AIMWARE forum or discord (stacky#6580) with the server IP and it's location
+PM me on the AIMWARE forum or discord (panicbutton#5807) with the server IP and it's location
