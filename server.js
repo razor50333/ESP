@@ -1,5 +1,3 @@
-//version 1.2.1
-
 const dgram = require("dgram");
 
 const PacketType = {
@@ -25,7 +23,6 @@ class PacketHandler {
         this.socket = socket;
         this.clientList = [];
         this.lastHeartbeatCheck = 0;
-        this.ipLastPacketTime = {};
     }
 
     makePacket(packet, type) {
@@ -44,7 +41,7 @@ class PacketHandler {
             return;
         }
 
-        let sameServerClients = this.clientList.filter(client => client.serverAddress == fromClient.serverAddress && client.address != fromClient.address)
+        let sameServerClients = this.clientList.filter(client => client.serverAddress == fromClient.serverAddress)// && client.address != fromClient.address)
         sameServerClients.forEach(client => {
             this.socket.send(this.makePacket(packet, PacketType.PLAYERINFO), client.port, client.address);
         });
@@ -60,8 +57,10 @@ class PacketHandler {
             this.makeRequestServerInfo(remote);
         }
 
-        if (curTime - this.lastHeartbeatCheck >= 60) {
-            this.clientList = this.clientList.filter(client => curTime - client.lastHeartbeat < 60);
+        if (curTime - this.lastHeartbeatCheck >= 30) {
+            console.log(`before: ${this.clientList.length}`)
+            this.clientList = this.clientList.filter(client => curTime - client.lastHeartbeat < 30);
+            console.log(`after: ${this.clientList.length}\n`)
             this.lastHeartbeatCheck = curTime;
         }
     }
@@ -79,18 +78,6 @@ class PacketHandler {
     handlePacket(packet, remote) {
         let type = parseInt(packet.substring(0, 1));
         packet = packet.substring(1);
-        let curTime = new Date().getTime() / 1000
-
-        if (packet.length > 512)
-            return;
-
-        if (remote.address in this.ipLastPacketTime) {
-            if (curTime - this.ipLastPacketTime[remote.address] < 0.0625) {
-                return;
-            }
-        }
-
-        this.ipLastPacketTime[remote.address] = curTime
 
         switch (type) {
             case PacketType.HEARTBEAT:
@@ -124,7 +111,7 @@ function main() {
         console.log(`Server error:\n${err.stack}`);
         socket.close();
     });
-
+    
     socket.bind(port, "0.0.0.0");
 }
 
