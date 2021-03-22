@@ -41,7 +41,7 @@ class PacketHandler {
             return;
         }
 
-        let sameServerClients = this.clientList.filter(client => client.serverAddress == fromClient.serverAddress)// && client.address != fromClient.address)
+        let sameServerClients = this.clientList.filter(client => client.serverAddress == fromClient.serverAddress && client.address != fromClient.address)
         sameServerClients.forEach(client => {
             this.socket.send(this.makePacket(packet, PacketType.PLAYERINFO), client.port, client.address);
         });
@@ -57,10 +57,8 @@ class PacketHandler {
             this.makeRequestServerInfo(remote);
         }
 
-        if (curTime - this.lastHeartbeatCheck >= 30) {
-            console.log(`before: ${this.clientList.length}`)
-            this.clientList = this.clientList.filter(client => curTime - client.lastHeartbeat < 30);
-            console.log(`after: ${this.clientList.length}\n`)
+        if (curTime - this.lastHeartbeatCheck >= 60) {
+            this.clientList = this.clientList.filter(client => curTime - client.lastHeartbeat < 60);
             this.lastHeartbeatCheck = curTime;
         }
     }
